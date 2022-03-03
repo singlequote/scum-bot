@@ -8,10 +8,11 @@
 In order to use this bot you need to install or update to the latest of : 
 - NodeJs
 - NPM
-Thats all ;-)
+
+Now run `npm install` to install the required dependencies.
 
 ## How to use
-First, copy and rename the .env.example to .env. Then edit the variables to your needs.
+First, copy and rename the `.env.example` to `.env` Then edit the variables to your needs.
 Fill in the API key you recieved. If everything is filled in, you can start the bot with : 
 
 ```javascript
