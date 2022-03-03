@@ -17,6 +17,9 @@ class Api
      */
     constructor()
     {
+        
+        
+        
         this.initialize();
     }
 
@@ -25,6 +28,12 @@ class Api
      */
     async initialize()
     {
+        this.log(`Starting appliation in 10 seconds...`);
+        
+        await this.timeout(10000);
+        
+        this.log(`Starting appliation...`);
+        
         keyboard.config.autoDelayMs = 1;
 
         this.retrieveChats();
@@ -36,21 +45,26 @@ class Api
     async retrieveChats()
     {
         const route = `${process.env.API_URL}/api/${process.env.API_KEY}`;
-        
+
         axios({
             method: 'get',
             url: route,
             responseType: 'json'
         }).then(async (response) => {
             
+            if(response.data.length === 0){
+                this.log(`No commands retrieved...`);
+            }
+            
             for (const command of response.data) {
-                console.log(`Processing command #${command.id}...`);
+                this.log(`Processing command #${command.id}...`);
                 await this.execCommands(command);
+                this.log(`Command #${command.id} processed...`);
             }
             
             setTimeout(this.retrieveChats.bind(this), 500);
         }).catch((err) => {
-            console.log(err);
+            this.log(err);
         });
     }
     
@@ -155,6 +169,18 @@ class Api
     timeout(ms)
     {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    /**
+     * 
+     * @param {Mixed|String} message
+     * @returns {void}
+     */
+    log(message)
+    {
+        if(process.env.API_DEBUG){
+            console.log(message);
+        }
     }
 }
 
