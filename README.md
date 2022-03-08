@@ -8,6 +8,13 @@
 In order to use this bot you need to install or update to the latest of : 
 - NodeJs
 - NPM
+- Python
+- GYP
+`npm install -g node-gyp`
+- WIndows build tools
+
+`npm install --g --production windows-build-tools`
+
 
 Now run `npm install` to install the required dependencies.
 
