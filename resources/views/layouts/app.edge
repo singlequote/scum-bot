@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <title>{{ title || "Simply Scum" }}</title>
+        @entryPointStyles('app')
+        
+        <!-- Font Awesome Icons -->
+        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body class="g-sidenav-show  bg-gray-200 dark-version g-sidenav-hidden">
+
+        <!--Sidebar-->
+        @include('layouts/partials/sidebar')
+
+        <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+            @include('layouts/partials/navbar')
+            <div class="container-fluid py-4">
+                @!section('content')
+            </div>
+        </main>
+
+        @entryPointScripts('app')
+        @!section('scripts')
+        
+        @if(flashMessages.has('success'))
+           <p>{{ flashMessages.get('success') }}</p>
+        @endif
+    </body>
+
+</html>

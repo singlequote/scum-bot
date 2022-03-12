@@ -1,0 +1,55 @@
+@layout('layouts/app')
+@set('title', 'Settings | Simply Scum Portal')
+
+@section('content')
+<form method='POST' action='{{ route('settings.store') }}'>
+    <div class="row mb-5">
+        <div class="card mt-4" id="api-settings">
+            <div class="card-header">
+                <h5>{{ "Simply Scum Bot API" }}</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group input-group-static">
+                            <label>{{ "API Key" }}</label>
+                            <input type="text" name='api_key' class="form-control" value="{{ flashMessages.get('api_key') || settings.API_KEY }}" required='required'>
+                            <p class="text-sm mt-2">{{ "This is your API key. You need it to connect to your portal!" }}</p>
+                        </div>
+                        @if(flashMessages.get('errors.api_key'))
+                        <span class='text-danger text-xs'>{{ flashMessages.get('errors.api_key') }}</span>
+                        @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group input-group-static">
+                            <label>{{ "End point" }}</label>
+                            <input type="text" name='end_point' readonly="readonly" class="form-control" value="{{ flashMessages.get('end_point') || settings.END_POINT }}" required='required'>
+                            <p class="text-sm mt-2">{{ "This is your API key. You need it to connect to your portal!" }}</p>
+                        </div>
+                        @if(flashMessages.get('errors.end_point'))
+                        <span class='text-danger text-xs'>{{ flashMessages.get('errors.end_point') }}</span>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="card mt-4" id="delete">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-sm-0 mb-4">
+                    <div class="w-50">
+                        <!--<h5>Command</h5>-->
+                    </div>
+                    <div class="w-50 text-end">
+                        <button class="btn bg-gradient-primary mb-0 ms-2" type="submit">{{ "Save settings" }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</form>
+@end

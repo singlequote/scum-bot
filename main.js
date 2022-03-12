@@ -1,187 +1,258 @@
-import {} from 'dotenv/config'
-import axios from 'axios';
-import https from 'https';
-import robot from 'robotjs';
-import {keyboard, Key} from '@nut-tree/nut-js';
-import clipboard from 'clipboardy';
+/* global process */
 
+require('dotenv').config();
+const {app, BrowserWindow} = require('electron');
+const axios = require('axios');
+const cp = require('child_process');
+var path = require("path");
 
-if (process.env.API_ENV === "local") {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
+require('update-electron-app')({
+  repo: 'https://github.com/singlequote/scum-bot',
+  updateInterval: '1 hour'
+});
 
-class Api
+/**
+ * @returns {StartApp}
+ */
+new class StartApp
 {
+
     /**
-     * @returns {Scrapper}
+     * @returns {StartApp}
      */
     constructor()
     {
-        
-        
-        
-        this.initialize();
+        this.exec;
+        this.isProd = process.env.NODE_ENV === 'production';
+        this.init();
     }
 
     /**
      * @returns {void}
      */
-    async initialize()
+    async init()
     {
-        this.log(`Starting appliation in 10 seconds...`);
-        
-        await this.timeout(10000);
-        
-        this.log(`Starting appliation...`);
-        
-        keyboard.config.autoDelayMs = 1;
+        await this.startAdonis();
 
-        this.retrieveChats();
+        app.on('ready', await this.createWindow.bind(this));
+        app.on('activate', await this.activateWindow.bind(this));
+        app.on('certificate-error', await this.certificateError.bind(this));
+        app.on('window-all-closed', await this.closeALlWindows.bind(this));
     }
-    
+
     /**
      * @returns {void}
      */
-    async retrieveChats()
+    async loadWindow()
     {
-        const route = `${process.env.API_URL}/api/${process.env.API_KEY}`;
+        const url = `http://127.0.0.1:3333`;
 
-        axios({
-            method: 'get',
-            url: route,
-            responseType: 'json'
+        await axios.get(url).catch(async (err) => {
+            await this.timeout(1000);
+            this.loadWindow();
         }).then(async (response) => {
-            
-            if(response.data.length === 0){
-                this.log(`No commands retrieved...`);
+            if (response) {
+                this.mainWindow.loadURL(url);
             }
-            
-            for (const command of response.data) {
-                this.log(`Processing command #${command.id}...`);
-                await this.execCommands(command);
-                this.log(`Command #${command.id} processed...`);
-            }
-            
-            setTimeout(this.retrieveChats.bind(this), 500);
-        }).catch((err) => {
-            this.log(err);
         });
     }
-    
+
     /**
-     * 
-     * @param {Object} command
      * @returns {void}
      */
-    async execCommands(command)
+    async loadDefaultLoader()
     {
-        if(command.is_order){
-            this.executeOrder(command);
-        }
+        await this.mainWindow.loadFile(`./resources/views/start.html`);
+        await this.loadWindow();
     }
-    
+
     /**
-     * @param {type} command
+     * On OS X it's common to re-create a window in the app when the
+     * dock icon is clicked and there are no other windows open.
+     * 
      * @returns {undefined}
      */
-    async executeOrder(command)
+    async activateWindow()
     {
-        await robot.keyTap('t'); //open chat menu
-
-        await this.setFakeName(command.execName); //set fake name
-
-        await this.message(`@${command.player.name} your order #${command.id} is being processed...`);
-        
-        await this.executeItems(command);
-
-        await this.message(`@${command.player.name} #${command.id} is processed!`);
-			
-        await robot.keyTap("escape");
-    }
-
-    /**
-     * @param {Object} command
-     * @returns {void}
-     */
-    async executeItems(command)
-    {
-        const location = await this.copyLocation(command.player.steam64);
-        
-        for (const item of command.exec) {
-            let addLocation = item.location ? `Location "${location}"` : ``;
-                        
-            let list = `#spawnItem ${item.item} ${item.amount} Uses ${item.uses} Health ${item.health} Dirtiness ${item.dirtiness}`;
-            
-            await this.message(`${list} ${addLocation}`);
+        if (this.mainWindow === null) {
+            this.createWindow();
         }
-        
-        return;
     }
 
     /**
-     * @param {String} steam64
+     * Quit when all windows are closed.
+     * On OS X it is common for applications and their menu bar
+     * to stay active until the user quits explicitly with Cmd + Q
+     * 
+     * @returns {undefined}
+     */
+    async closeALlWindows()
+    {
+        if (process.platform !== 'darwin') {
+            app.quit();
+        }
+    }
+
+    /**
+     * SSL/TSL: this is the self signed certificate support
+     * On certificate error we disable default behaviour (stop loading the page)
+     * and we then say "it is all fine - true" to the callback
+     * 
+     * @param {type} event
+     * @param {type} webContents
+     * @param {type} url
+     * @param {type} error
+     * @param {type} certificate
+     * @param {type} callback
+     * @returns {undefined}
+     */
+    async certificateError(event, webContents, url, error, certificate, callback)
+    {
+        event.preventDefault();
+        callback(true);
+    }
+
+    /**
+     * Create the browser window. 
+     * 
      * @returns {void}
      */
-    async copyLocation(steam64)
+    async createWindow()
     {
-        await this.copy(`#Location ${steam64} true`);
-        await robot.keyTap("insert", "shift");
-        await robot.keyTap("enter");
-        
-        return await clipboard.read();
+        this.mainWindow = await new BrowserWindow({
+            width: 800,
+            height: 600,
+            autoHideMenuBar: true,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+
+        this.mainWindow.on('closed', () => {
+            // Dereference the window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
+            this.mainWindow = null;
+        });
+
+//        this.mainWindow.webContents.openDevTools();
+
+        return await this.loadDefaultLoader();
     }
 
     /**
-     * @param {String} message
      * @returns {void}
      */
-    async message(message)
+    async startAdonis()
     {
-        await this.copy(message);
-        await robot.keyTap("insert", "shift");
-        await robot.keyTap("enter");
-    }
-
-    /**
-     * @param {String} name
-     * @returns {void}
-     */
-    async setFakeName(name)
-    {
-        await this.copy(`#setFakeName ${name}`);
-        await robot.keyTap("insert", "shift");
-        await robot.keyTap("enter");
-    }
-
-    /**
-     * @param {String} content
-     * @returns {Boolean}
-     */
-    async copy(content)
-    {
-        return await clipboard.write(content);
+        if (this.isProd) {
+            await cp.exec(`node build/server.js`);
+        } else {
+            await cp.exec(`npm run dev --watch`);
+        }
     }
 
     /**
      * @param {int} ms
      * @returns {Promise}
      */
-    timeout(ms)
+    async timeout(ms)
     {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
-    /**
-     * 
-     * @param {Mixed|String} message
-     * @returns {void}
-     */
-    log(message)
-    {
-        if(process.env.API_DEBUG){
-            console.log(message);
-        }
-    }
-}
+};
 
-new Api;
+
+
+
+//let mainWindow;
+//let exec;
+//
+//
+//
+//
+//async function createWindow() {
+//    // Create the browser window.     
+//    mainWindow = new BrowserWindow({
+//        width: 800,
+//        height: 600,
+//        autoHideMenuBar: true,
+//        webPreferences: {
+//            nodeIntegration: true
+//        }
+//    });
+//
+//    await startAdonis();
+//
+//    //mainWindow.webContents.openDevTools()
+//
+//    // and load the index.html of the app.     
+//    //mainWindow.loadURL(`http://${process.env.HOST}:${process.env.PORT}`)  
+//    await mainWindow.loadFile(`./resources/views/start.html`);
+//
+//    await loadWindow();
+//    
+//    
+//    
+////    exec.kill('SIGINT');
+//    
+//    // Emitted when the window is closed.
+//    mainWindow.on('closed', function () {
+//        // Dereference the window object, usually you would store windows
+//        // in an array if your app supports multi windows, this is the time
+//        // when you should delete the corresponding element.
+//        mainWindow = null;
+//    });
+//}
+//
+///**
+// * 
+// * @returns {unresolved}
+// */
+//async function loadWindow()
+//{
+//    const url = `http://127.0.0.1:3333`;
+//    axios.get(url).catch((err) => {
+//        loadWindow();
+//        console.log('check again');
+//    }).then((response) => {
+//        if(response){
+//            console.log('good');
+//            mainWindow.loadURL(url);
+//        }
+//    });
+//    
+////    return await mainWindow.loadURL().catch((err : any) => {
+////        console.log('oopsie');
+////    });
+//}
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+//app.on('ready', createWindow);
+
+// Quit when all windows are closed.
+//app.on('window-all-closed', function () {
+//    // On OS X it is common for applications and their menu bar
+//    // to stay active until the user quits explicitly with Cmd + Q
+//    if (process.platform !== 'darwin') {
+//        app.quit();
+//    }
+//});
+//
+//app.on('activate', function () {
+//    // On OS X it's common to re-create a window in the app when the
+//    // dock icon is clicked and there are no other windows open.
+//    if (mainWindow === null) {
+////        createWindow();
+//    }
+//});
+
+//// SSL/TSL: this is the self signed certificate support
+//app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+//    // On certificate error we disable default behaviour (stop loading the page)
+//    // and we then say "it is all fine - true" to the callback
+//    event.preventDefault();
+//    callback(true);
+//});

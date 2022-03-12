@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <title>Simply Scum Bot</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Quicksand');
+
+
+
+            body {
+                width: auto;
+                height: auto;
+                background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/518746/art-artistic-black-background-752484-min.jpg");
+                background-size: cover;
+            }
+
+            body:before {
+                width: 100%;
+                height: 100%;
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                background-image: linear-gradient(
+                    to bottom right,
+                    rgba(29, 38, 113, 0.75),
+                    rgba(195, 65, 150, 0.75)
+                    );
+                background-size: auto;
+            }
+
+            h1,
+            h2 {
+                font-family: 'Quicksand';
+                color: #f0eff5;
+                margin: 0;
+                padding: 0;
+                font-weight: 300;
+            }
+
+            h1 {
+                font-size: 5em;
+            }
+
+            h2 {
+                font-size: 2.5em;
+                opacity: .7;
+                color: #fd878e;
+                animation: appear 1s 2s forwards;
+            }
+
+            .container-fluid {
+                margin: 4em;
+                text-align: center;
+            }
+
+            .loader {
+                animation: spinningColor 1.5s ease-in-out infinite;
+                margin: 50px auto;
+                border: 5px double #f0eff5;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+            }
+
+            @keyframes spinningColor {
+                0% {
+                    transform: rotate(360deg);
+                    border-top:5px dashed #f56682;
+                    border-bottom:5px dashed #387eff;
+                }
+                25% {
+                    border-top:5px dashed #f591a6;
+                    border-bottom:5px dashed #6da7f7;
+                }
+                50% {
+                    border-top:5px dashed #fd878e;
+                    border-bottom:5px dashed #4ba3ff;
+                }
+                75% {
+                    border-top:5px dashed #f57f8f;
+                    border-bottom:5px dashed #569dff;
+                }
+                100% {
+                    border-top:5px dashed #f56682;
+                    border-bottom:5px dashed #387eff;
+                }
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-200 dark-version">
+        <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+            <div class="container-fluid py-4">
+                <h1>Simply Scum Bot</h1>
+                <div class="loader"></div>
+                <h2>Beta 0.0.1</h2>
+            </div>
+        </main>
+    </body>
+
+</html>
+

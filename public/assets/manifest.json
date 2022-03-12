@@ -1,0 +1,17 @@
+{
+  "assets/app.css": "http://localhost:8080/assets/app.css",
+  "assets/app.js": "http://localhost:8080/assets/app.js",
+  "assets/dashboard.js": "http://localhost:8080/assets/dashboard.js",
+  "assets/images/logo.png": "http://localhost:8080/assets/images/logo.34d46816.png",
+  "assets/fonts/material-icons-two-tone.woff": "http://localhost:8080/assets/fonts/material-icons-two-tone.169d9845.woff",
+  "assets/fonts/material-icons-two-tone.woff2": "http://localhost:8080/assets/fonts/material-icons-two-tone.20196d75.woff2",
+  "assets/fonts/material-icons-round.woff": "http://localhost:8080/assets/fonts/material-icons-round.da8b129e.woff",
+  "assets/fonts/material-icons-outlined.woff": "http://localhost:8080/assets/fonts/material-icons-outlined.87cab673.woff",
+  "assets/fonts/material-icons-round.woff2": "http://localhost:8080/assets/fonts/material-icons-round.d2bed20c.woff2",
+  "assets/fonts/material-icons.woff": "http://localhost:8080/assets/fonts/material-icons.bd61fe01.woff",
+  "assets/fonts/material-icons-sharp.woff": "http://localhost:8080/assets/fonts/material-icons-sharp.1ce995ac.woff",
+  "assets/fonts/material-icons-outlined.woff2": "http://localhost:8080/assets/fonts/material-icons-outlined.5520f273.woff2",
+  "assets/fonts/material-icons-sharp.woff2": "http://localhost:8080/assets/fonts/material-icons-sharp.74f9d37f.woff2",
+  "assets/fonts/material-icons.woff2": "http://localhost:8080/assets/fonts/material-icons.a3e4b857.woff2",
+  "assets/images/logo.ico": "http://localhost:8080/assets/images/logo.d34fd833.ico"
+}
