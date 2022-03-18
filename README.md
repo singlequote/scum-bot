@@ -8,6 +8,11 @@ Check out our discord channel at [discord.com](https://discord.gg/ky3FkfbzSr)
 
 ### Changelog
 
+**1.0.1**
+- Bug fixing
+- Remove flash session image
+- Fixed disconnect issue with server
+
 **1.0.0**
 - Added windows installer
 - Enabled auto updater
