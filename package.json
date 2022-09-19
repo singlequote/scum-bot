@@ -1,0 +1,93 @@
+{
+    "name": "Simply-Scum-Bot",
+    "version": "1.1.3",
+    "private": true,
+    "main": "main.js",
+    "description": "Simply Scum Bot",
+    "author": "Wim Pruiksma",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/singlequote/scum-bot.git"
+    },
+    "scripts": {
+        "dev": "webpack --watch --mode=development",
+        "prod": "webpack --mode=production",
+        "start": "electron . --dev",
+        "package": "electron-forge package",
+        "publish": "electron-forge publish",
+        "make": "electron-forge make"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.63",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+        "@electron-forge/maker-zip": "^6.0.0-beta.63",
+        "@electron-forge/publisher-github": "^6.0.0-beta.63",
+        "bootstrap": "^5.1.3",
+        "css-loader": "^6.7.1",
+        "electron": "^17.1.2",
+        "electron-forge": "^5.2.4",
+        "jquery": "^3.6.0",
+        "material-icons": "^1.10.8",
+        "moment": "^2.29.1",
+        "path": "^0.12.7",
+        "sass": "^1.49.9",
+        "sass-loader": "^12.6.0",
+        "style-loader": "^3.3.1",
+        "sweetalert2": "^11.4.6",
+        "webpack": "^5.70.0",
+        "webpack-cli": "^4.9.2"
+    },
+    "dependencies": {
+        "@nut-tree/nut-js": "^2.0.1",
+        "axios": "^0.26.1",
+        "basic-ftp": "^4.6.6",
+        "clipboardy": "^2.3.0",
+        "dotenv": "^16.0.0",
+        "electron-log": "^4.4.6",
+        "electron-squirrel-startup": "^1.0.0",
+        "http": "^0.0.1-security",
+        "https": "^1.0.0",
+        "socket.io": "^4.4.1",
+        "socket.io-client": "^4.4.1",
+        "update-electron-app": "^2.0.1"
+    },
+    "config": {
+        "forge": {
+            "publishers": [
+                {
+                    "name": "@electron-forge/publisher-github",
+                    "config": {
+                        "draft": false,
+                        "repository": {
+                            "owner": "singlequote",
+                            "name": "scum-bot"
+                        }
+                    }
+                }
+            ],
+            "packagerConfig": {
+                "asar": false,
+                "icon": "./resources/assets/images/logo.ico"
+            },
+            "makers": [
+                {
+                    "name": "@electron-forge/maker-zip"
+                },
+                {
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "authors": "Wim Pruiksma",
+                        "owners": "Wim Pruiksma",
+                        "title": "Simply Scum Bot",
+                        "iconUrl": "https://simply-scum.com/images/logo.ico",
+                        "setupIcon": "./resources/assets/images/logo.ico",
+                        "description": "A Simply Scum Portal Bot"
+                    }
+                }
+            ],
+            "othermakers": [
+                
+            ]
+        }
+    }
+}
