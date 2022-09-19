@@ -9,7 +9,7 @@ Pull the project from the remote. run the following:
 npm install
 ```
 
-
+> You need a server to run the program. Add yours add [simply-scum.com](https://simply-scum.com)
 
 ## Start the program
 Two scripts needs to be running before you can start the program. Start the webpack by running:
@@ -21,3 +21,7 @@ And start the program with:
 ```console
 npm start
 ```
+
+## Packages used
+
+The program runs in `node js` and electron as framework. The robot that makes the clicks, types the text etc. is `@nut-tree/nut-js`
