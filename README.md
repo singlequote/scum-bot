@@ -2,7 +2,12 @@
 A simply Scum portal bot manager.
 Check out our discord channel at [discord.com](https://discord.com/invite/ky3FkfbzSr)
 
-## Installation
+## Bot usage
+use the installer (.exe) from the releases page. This will install the bot on your pc. This will also install new updates auto.
+
+> Make sure you have the latest Microsoft Visual C++ Redistributable installed
+
+## Development installation
 Pull the project from the remote. run the following:
 
 ```console
