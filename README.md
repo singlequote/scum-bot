@@ -1,14 +1,23 @@
 # scum-bot
-A simply Scum portal bot manager
+A simply Scum portal bot manager.
+Check out our discord channel at [discord.com](https://discord.com/invite/ky3FkfbzSr)
 
-### How to use
-Download the official installer from [simply-scum.com](https://simply-scum.com/). Run the installer and wait for updates to install.
+## Installation
+Pull the project from the remote. run the following:
 
-Check out our discord channel at [discord.com](https://discord.gg/ky3FkfbzSr)
+```console
+npm install
+```
 
-### Changelog
 
-**1.0.0**
-- Added windows installer
-- Enabled auto updater
-- Test basic commands
+
+## Start the program
+Two scripts needs to be running before you can start the program. Start the webpack by running:
+```console
+npm run dev
+```
+
+And start the program with:
+```console
+npm start
+```
