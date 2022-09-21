@@ -51,9 +51,9 @@ class StartApp
         const running = await this.running('scum.exe');
 
         if(running){
-            await SettingsController.storeSync({ACTIVE_CHANNEL: null});
+            await SettingsController.storeSync({ACTIVE_CHANNEL: null, OPEN_CHAT : false});
         }else{
-            await SettingsController.storeSync({ACTIVE_CHANNEL: this.settings.START_CHANNEL});
+            await SettingsController.storeSync({ACTIVE_CHANNEL: this.settings.START_CHANNEL, OPEN_CHAT : false});
         }
         
         const io = new Server(httpServer, {/* options */});

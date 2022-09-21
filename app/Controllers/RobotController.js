@@ -37,19 +37,44 @@ class RobotController
             return await this.log(`Error: Game is not running!`);
         }
         
-        await this.keyPress(Key.T); //open chat menu
+        await this.openChat();
 
         for (const command of data.commands) {
-            await this.changeChannel(socket, command.channel);
             this.log(`Processing #${command.command}...`);
             await this.execCommands(command);
             await this.timeout(this.settings.COMMAND_DELAY);
         }
         
-        await this.keyPress(Key.Escape); //close chat menu
+//        await this.closeChat();
     }
     
     /**
+     * 
+     * @returns {void}
+     */
+    async openChat()
+    {
+        if(this.settings.OPEN_CHAT === false){
+            await SettingsController.store(this.socket, {OPEN_CHAT : true});
+            this.log(`INFO: Opening chat menu`);
+            await this.keyPress(Key.T); //open chat menu
+        }
+    }
+    
+    /**
+     * @returns {void}
+     */
+    async closeChat()
+    {
+        if(this.settings.OPEN_CHAT === true){
+            await SettingsController.store(this.socket, {OPEN_CHAT : false});
+            this.log(`INFO: Closing chat menu`);
+            await this.keyPress(Key.Escape); //close chat menu
+        }
+    }
+    
+    /**
+     * @param {null|Object} localSocket
      * @returns {void}
      */
     async findChannelName(localSocket = null)
@@ -58,6 +83,8 @@ class RobotController
             this.socket = localSocket;
         }
         
+        this.settings = await SettingsController.get();
+        
         const running = await this.isRunning('scum.exe');
         
         if(!running){
@@ -65,11 +92,9 @@ class RobotController
             return;
         }
         
-        await this.keyPress(Key.T); //open chat menu
+        await this.openChat();
         
         await this.message(`@#Powered by : Simply Scum Bot!`);
-        
-        await this.keyPress(Key.Escape); //close chat menu
     }
     
     /**
@@ -135,6 +160,8 @@ class RobotController
             await this.teleportToPlayer(command.player);
         }
         
+        await this.changeChannel(this.socket, command.channel);
+        
         this.shouldTeleport = false;
         
         if (command.is_order) {
@@ -160,7 +187,11 @@ class RobotController
      */
     async teleportToPlayer(player)
     {        
+        await this.changeChannel(this.socket, 'global');
+        await this.message(`@${player.name} please wait till i get to you!`);
+        
         this.log(`#TeleportTo ${player.name}`);
+                
         await this.message(`#TeleportTo ${player.steam64}`);
                         
         await this.timeout(this.settings.TELEPORT_DELAY);
@@ -336,6 +367,12 @@ class RobotController
      * @returns {Promise}
      */
     async isRunning(query) {
+        
+        if(isDev){
+            this.log(`INFO: Dev mode running!`);
+            return true;
+        }
+        
         let platform = process.platform;
         let cmd = '';
         switch (platform) {

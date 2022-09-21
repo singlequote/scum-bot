@@ -23,6 +23,7 @@ class Dashboard
         $(`#apiKey`).on('click', this.demandApiKey.bind(this));
         $(`input[name="commands"]`).on('change', this.toggleCommands.bind(this));
         $(`input[name="processing"]`).on('change', this.toggleProcessing.bind(this));
+        $(`input[name="open_chat"]`).on('change', this.openChat.bind(this));
         
         //reload the bot after period of time
         setTimeout(this.reloadApp.bind(this), (60 * 1000) * 60);
@@ -75,6 +76,14 @@ class Dashboard
         }
         
         this.localSocket.emit('exec:running', `scum.exe`);
+    }
+    
+    /**
+     * @returns {void}
+     */
+    async openChat()
+    {
+        this.localSocket.emit('settings:store', {OPEN_CHAT : $(`input[name="open_chat"]`).is(':checked')});
     }
     
     /**
@@ -222,6 +231,7 @@ class Dashboard
         
         $(`input[name="processing"]`).prop('checked', this.enableProcessing);
         $(`input[name="commands"]`).prop('checked', this.enableCommands);
+        $(`input[name="open_chat"]`).prop('checked', this.settings.OPEN_CHAT);
         
         $('#startDelay').html(`${this.settings.START_DELAY} seconds`);
         $('#activeChannel').html(`${this.settings.ACTIVE_CHANNEL || '--'}`);
@@ -263,10 +273,10 @@ class Dashboard
      */
     async addServerMessage(message)
     {
-        if($('#visual pre').length >= 10){
+        if($('#visual pre').length >= 17){
             $('#visual pre').last().remove();
         }
-        
+
         $('#visual').prepend(`<pre style="margin-bottom: 0px;">${Moment().format('HH:mm:ss')}: <i>${message}</i></pre>\n`);
     }
     
@@ -360,6 +370,7 @@ class Dashboard
     async manualDownloadLogs(data = {})
     {     
         if(!this.enableProcessing){
+            this.addServerMessage(`Can't start processing = disabled...`);
             return;
         }
         

@@ -1,5 +1,4 @@
 node_modules/
-nbproject/
-dist/
 out/
+dist/
 .env
